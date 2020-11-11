@@ -4,12 +4,17 @@ searchify/searchify-frontend/node_modules/
 searchify/searchify-frontend/.vs/
 searchify/searchify-frontend/yarn-error.log
 
+# Common python ignore
+__init__.py
+__pycache__/
+.idea
+venv
+
 # API configuration. 
-searchify/api/.idea
-searchify/api/*__init__.py
 searchify/api/data/
-searchify/api/*__pycache__
 searchify/api/src/tools/
 searchify/api/celerybeat-schedule
-searchify/api/src/hiExpan/__pycache__/
 searchify/api/KB/data-concept-instance-relations.tx
+
+# Searchify crawler
+searchifycrawler/items.json
