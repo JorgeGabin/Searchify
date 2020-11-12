@@ -22,9 +22,6 @@ ENV FLASK_ENV="${FLASK_ENV}" \
 
 COPY . .
 
-RUN find . -type f -iname "*.sh" -exec chmod +x {} \;
-RUN find . -type f -iname "*.sh" -exec dos2unix {} \;
-
 RUN pip install --editable ./src
 
 EXPOSE 5000

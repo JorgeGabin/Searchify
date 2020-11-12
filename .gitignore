@@ -1,8 +1,8 @@
 # Frontend build output.
-searchify/searchify-frontend/build/
-searchify/searchify-frontend/node_modules/
-searchify/searchify-frontend/.vs/
-searchify/searchify-frontend/yarn-error.log
+searchify-frontend/build/
+searchify-frontend/node_modules/
+searchify-frontend/.vs/
+searchify-frontend/yarn-error.log
 
 # Common python ignore
 __init__.py

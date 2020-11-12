@@ -27,18 +27,18 @@ def executePipeline(asyncTask=None, arglist=[]):
     #                     help='number of each node\'s initial children for depth expansion')
     args = parser.parse_args(arglist)
 
-    # try:
+    try:
     # updateProgress(asyncTask, 'CORPUS', 0, 'Corpus processing step')
     # processCorpus(args.data, args.taxonPrefix, skipCorpusProcess)
     # updateProgress(asyncTask, 'FEATURE', 25, 'Feature extraction step')
     # extractFeatures(args.data, skipExtractFeatures)
     # updateProgress(asyncTask, 'TAXONOMY', 50, 'Taxonomy construction step')
     # createTaxonomy(args, seedlist=seedlist);
-    updateProgress(asyncTask, 'INDEXING', 75, 'Creating index step')
-    makeIndex(args.indexName)
-    updateProgress(asyncTask, 'SUCCESS', 100, "Done.")
+        updateProgress(asyncTask, 'INDEXING', 75, 'Creating index step')
+        makeIndex(args.indexName)
+        updateProgress(asyncTask, 'SUCCESS', 100, "Done.")
 
-    # except Exception as e:
-    #     asyncTask.update_state(state='FAILURE', \
-    #         meta={'current': -1	, 'total': 100, \
-    #         'status': 'Something went wrong in the taxonomy procedure. Contact system administrator.'})
+    except Exception as e:
+        asyncTask.update_state(state='FAILURE', \
+            meta={'current': -1	, 'total': 100, \
+            'status': 'Something went wrong in the taxonomy procedure. Contact system administrator.'})

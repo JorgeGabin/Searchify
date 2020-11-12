@@ -6,4 +6,6 @@ flask
 celery
 redis
 elasticsearch
+Scrapy
 urllib3
+lyricsgenius

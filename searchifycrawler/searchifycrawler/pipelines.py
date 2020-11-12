@@ -11,12 +11,12 @@ import json
 class SearchifycrawlerPipeline(object):
 
 	def open_spider(self, spider):
-		self.file = open('items.json', 'w')
+		self.file = open('items.json', 'w', encoding='utf8')
 
 	def close_spider(self, spider):
 		self.file.close()
 
 	def process_item(self, item, spider):
-		line = json.dumps(dict(item)) + "\n"
+		line = json.dumps(dict(item), ensure_ascii=False).encode('utf-8').decode() + "\n"
 		self.file.write(line)
 		return item

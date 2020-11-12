@@ -41,7 +41,7 @@ services:
       context: "."
       args:
         - "FLASK_ENV=${FLASK_ENV:-production}"
-    command: celery worker -B -l debug -A hiExpanAPI.celery
+    command: celery worker -B -l debug -A Searchify.celery
     depends_on:
       - "redis"
     env_file:
