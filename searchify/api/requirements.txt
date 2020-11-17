@@ -2,11 +2,9 @@ numpy
 spacy
 scipy
 tqdm
-gensim
 flask
-celery
+celery<=4.4.7
 redis
-apache-beam
-gunicorn
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
 elasticsearch
+urllib3
+gunicorn

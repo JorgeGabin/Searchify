@@ -1,3 +1,6 @@
+import datetime
+import time
+
 import scrapy
 import lyricsgenius
 from scrapy.spiders import Rule
@@ -51,7 +54,7 @@ class SearchifySpider(scrapy.spiders.CrawlSpider):
         song['song_duration'] = response.css('.total-duration::text').extract()
         song['song_album'] = {
             "album_name": response.css('.media-bd').xpath("//h1/span/text()").extract_first(),
-            "album_release_year": response.css('.entity-additional-info::text').extract_first().split(" ")[0]
+            "album_release_year": int(response.css('.entity-additional-info::text').extract_first().split(" ")[0])
         }
 
         i = 0
@@ -60,11 +63,13 @@ class SearchifySpider(scrapy.spiders.CrawlSpider):
             resultSong['song_url'] = song['song_url']
             resultSong['song_name'] = song['song_name'][i]
             resultSong['song_artists'] = song['song_artists']
-            resultSong['song_duration'] = song['song_duration'][i]
+            x = time.strptime(song['song_duration'][i].split(',')[0], '%M:%S')
+            seconds = datetime.timedelta(hours=x.tm_hour, minutes=x.tm_min, seconds=x.tm_sec).total_seconds()
+            resultSong['song_duration'] = seconds
             resultSong['song_album'] = song['song_album']
 
             geniusSong = self.genius.search_song(song['song_name'][i], song['song_artists'])
-            resultSong['song_lyrics'] = geniusSong.lyrics
+            resultSong['song_lyrics'] = geniusSong.lyrics.replace("\n", "\\n")
 
             i += 1
 
@@ -90,8 +95,8 @@ class SearchifySpider(scrapy.spiders.CrawlSpider):
         file['artist_name'] = response.css('.view-header::text').extract_first()
 
         insights = response.css('.insights__column__number::text').extract()
-        file['artist_followers'] = insights[0]
-        file['artist_listeners'] = insights[1]
+        file['artist_followers'] = int(insights[0].replace(',', ''))
+        file['artist_listeners'] = int(insights[1].replace(',', ''))
 
         parsed_locations = []
         locations = response.css('.horizontal-list__item__title::text').extract()
