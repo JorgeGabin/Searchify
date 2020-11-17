@@ -1,5 +1,5 @@
 FROM python:3.6.9
-LABEL maintainer="Juan"
+LABEL maintainer="Searchify"
 
 WORKDIR /app
 

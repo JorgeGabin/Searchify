@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 from elasticsearch import Elasticsearch, helpers
-import os, uuid, json
+import os, json
 
 ELASTIC_URL = 'es01:9200'
 song_mapping = {
@@ -37,7 +37,7 @@ song_mapping = {
                 }
             },
             "song_artists": {
-                "type": "keywords",
+                "type": "text",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -47,27 +47,10 @@ song_mapping = {
                 }
             },
             "song_duration": {
-                "type": "integer",
+                "type": "long",
             },
             "song_album": {
-                "type": "text",
-                "fields": {
-                    "analyzed": {
-                        "type": "text",
-                        "analyzer": "eventNameAnalyzer",
-                        "search_analyzer": "eventNameAnalyzer"
-                    }
-                }
-            },
-            "song_album": {
-                "type": "text",
-                "fields": {
-                    "analyzed": {
-                        "type": "text",
-                        "analyzer": "eventNameAnalyzer",
-                        "search_analyzer": "eventNameAnalyzer"
-                    }
-                }
+                "type": "object",
             },
             "song_lyrics": {
                 "type": "text",
@@ -115,7 +98,7 @@ playlist_mapping = {
                 }
             },
             "playlist_songs": {
-                "type": "keywords",
+                "type": "keyword",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -138,7 +121,7 @@ playlist_mapping = {
                 }
             },
             "playlist_similar": {
-                "type": "keywords",
+                "type": "keyword",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -190,7 +173,7 @@ artist_mapping = {
                 }
             },
             "artist_locations": {
-                "type": "keywords",
+                "type": "keyword",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -233,17 +216,18 @@ def bulk_json_data(json_file):
     json_list = get_data_from_file(json_file)
     i = 0
     for d in json_list:
-        i += 1
         doc = json.loads(d)
         # use a `yield` generator so that the data
         # isn't loaded into memory
-        if '{"index"' not in doc:
-            index_info = json_list[i-1]['index']
+        if 'index' not in doc:
+            index_info = json.loads(json_list[i-1])['index']
             yield {
                 "_index": index_info['_index'],
                 "_id": index_info['_id'],
                 "_source": doc,
             }
+
+        i += 1
 
 def indexBulkDocs(elastic, datapath):
     # make the bulk call, and get a response

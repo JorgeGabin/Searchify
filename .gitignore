@@ -1,8 +1,8 @@
 # Frontend build output.
-searchify-frontend/build/
-searchify-frontend/node_modules/
-searchify-frontend/.vs/
-searchify-frontend/yarn-error.log
+searchify/searchify-frontend/build/
+searchify/searchify-frontend/.vs/
+searchify/searchify-frontend/yarn-error.log
+searchify/searchify-frontend/node_modules
 
 # Common python ignore
 __init__.py
@@ -10,11 +10,7 @@ __pycache__/
 .idea
 venv
 
-# API configuration. 
-searchify/api/data/
+# API configuration.
 searchify/api/src/tools/
 searchify/api/celerybeat-schedule
 searchify/api/KB/data-concept-instance-relations.tx
-
-# Searchify crawler
-searchifycrawler/items.json

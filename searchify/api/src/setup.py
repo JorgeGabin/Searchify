@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(
-    name='hiExpanAPI',
+    name='searchifyAPI',
     version='1.0',
-    author="Juan Luis Filgueiras Rilo",
-    author_email="juan.filgueiras.rilo@udc.es",
-    description="HiExpan Framework API for taxonomy construction and retrieval",
+    authors="Juan Luis Filgueiras Rilo & Jorge Juan Gabín Brenlla",
+    author_emails="juan.filgueiras.rilo@udc.es & jorge.gabin@udc.es",
+    description="Searchify API for Spotify searchs",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
