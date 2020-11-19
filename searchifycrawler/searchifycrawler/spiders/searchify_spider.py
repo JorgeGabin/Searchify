@@ -62,14 +62,17 @@ class SearchifySpider(scrapy.spiders.CrawlSpider):
             resultSong = SearchifycrawlerSong()
             resultSong['song_url'] = song['song_url']
             resultSong['song_name'] = song['song_name'][i]
-            resultSong['song_artists'] = song['song_artists']
+            resultSong['song_artists'] = [song['song_artists']]
             x = time.strptime(song['song_duration'][i].split(',')[0], '%M:%S')
             seconds = datetime.timedelta(hours=x.tm_hour, minutes=x.tm_min, seconds=x.tm_sec).total_seconds()
             resultSong['song_duration'] = seconds
             resultSong['song_album'] = song['song_album']
 
-            geniusSong = self.genius.search_song(song['song_name'][i], song['song_artists'])
-            resultSong['song_lyrics'] = geniusSong.lyrics.replace("\n", "\\n")
+            try:
+                geniusSong = self.genius.search_song(song['song_name'][i], song['song_artists'])
+                resultSong['song_lyrics'] = geniusSong.lyrics.replace("\n", "\\n")
+            except:
+                resultSong['song_lyrics'] = ""
 
             i += 1
 

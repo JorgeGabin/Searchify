@@ -3,7 +3,7 @@
 from elasticsearch import Elasticsearch, helpers
 import os, json
 
-ELASTIC_URL = 'es01:9200'
+ELASTIC_URL = 'localhost:9200'
 song_mapping = {
     "settings": {
         "analysis": {
@@ -37,7 +37,7 @@ song_mapping = {
                 }
             },
             "song_artists": {
-                "type": "text",
+                "type": "keyword",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -111,7 +111,7 @@ playlist_mapping = {
                 "type": "integer",
             },
             "playlist_artists_albums": {
-                "type": "text",
+                "type": "keyword",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -252,3 +252,5 @@ def index():
     elastic.indices.create(index='artists', body=artist_mapping)
 
     return indexBulkDocs(elastic, datapath)
+
+index()
