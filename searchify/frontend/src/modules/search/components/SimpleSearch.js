@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const DoFacetedSearch = ({initialQuery}) => {
+const SimpleSearch = ({initialQuery}) => {
 
     const classes = useStyles();
     // const dispatch = useDispatch();
@@ -92,4 +92,4 @@ const DoFacetedSearch = ({initialQuery}) => {
 
 }
 
-export default DoFacetedSearch;
+export default SimpleSearch;

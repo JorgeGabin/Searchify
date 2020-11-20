@@ -63,6 +63,18 @@ const Header = () => {
                         <HomeIcon style={{ color: 'white' }} fontSize="large" />
                     </Link>
                     <Typography variant="h5" noWrap className={classes.title}>Searchify</Typography>
+                    <List>
+                        <ListItemLink to="/songs" primary="Songs" icon={<PersonIcon  style={{ color: 'white' }} />} />
+                    </List>
+                    <List>
+                        <ListItemLink to="/playlists" primary="Playlists" icon={<PersonIcon  style={{ color: 'white' }} />} />
+                    </List>
+                    <List>
+                        <ListItemLink to="/lyrics" primary="Lyrics" icon={<PersonIcon  style={{ color: 'white' }} />} />
+                    </List>
+                    <List>
+                        <ListItemLink to="/artists" primary="Artists" icon={<PersonIcon  style={{ color: 'white' }} />} />
+                    </List>
                 </Toolbar>
             </AppBar>
         </div>

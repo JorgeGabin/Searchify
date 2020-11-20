@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Home from './Home';
-import { DoFacetedSearch } from '../../search';
 import Container from '@material-ui/core/Container';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -22,6 +21,10 @@ const Body = () => {
                 <br />
                 <Switch>
                     <Route exact path="/"><Home /></Route>
+                    <Route exact path="/songs"><Home /></Route>
+                    <Route exact path="/lyrics"><Home /></Route>
+                    <Route exact path="/playlists"><Home /></Route>
+                    <Route exact path="/artists"><Home /></Route>
                     <Route><Home /></Route>
                 </Switch>
             </Container>

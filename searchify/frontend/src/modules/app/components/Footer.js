@@ -28,7 +28,7 @@ const Footer = () => {
     return (
         <Box className={classes.root} variant="outlined">
             <Typography variant='button'>
-                <FormattedMessage id="project.app.Footer.text"/>
+                Searchify - RIWS - Facultad de Informática Coruña - Universidade da Coruña
             </Typography>
             <Divider />
         </Box>
