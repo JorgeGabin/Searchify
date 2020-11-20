@@ -1,7 +1,6 @@
 from flask import jsonify, Flask, request, redirect, url_for
 from celery import Celery
-import os,json,pickle
-from elasticsearch import Elasticsearch, helpers
+import os,json
 from search import facetedSearch
 
 app = Flask(__name__)
@@ -20,6 +19,7 @@ celery.conf.update(app.config)
 def build_index(self, arglist):
     executePipeline(arglist=arglist)
     return {'current': 100, 'total': 100, 'result': 0}
+
 
 @app.route('/status/<task_id>')
 def taskstatus(task_id):
@@ -53,36 +53,21 @@ def taskstatus(task_id):
     print(response)
     return jsonify(response)
 
-@app.route('/crawl', methods=['POST'])
-def crawl():
-    task = build_index.apply_async(args=[arglist])
-    return jsonify(task.id), 202, {'Location': url_for('taskstatus', task_id=task.id)}
 
-@app.route('/do-faceted-search/<indexName>', methods=['POST'])
-def do_faceted_search(indexName):
-    queryString = request.args.get('query')
+@app.route('/songs', methods=['GET'])
+def find_songs():
+    params = request.json
     size = request.args.get('size')
     fromParam = request.args.get('from')
-    facets = request.json
-    if (facets is None or len(facets) == 0) and (queryString is None or queryString == ''):
+
+    if params is None or len(params) == 0:
         resp = jsonify('No search criteria provided.')
         resp.status_code = 401
         print(resp)
         return resp
 
-    if dataname == None:
-        resp = jsonify('No dataname provided.')
-        resp.status_code = 401
-        print(resp)
-        return resp
+    docs = facetedSearch.searchSongs(params, fromParam, size)
 
-    if taxonprefix == None:
-        resp = jsonify('No taxon prefix provided.')
-        resp.status_code = 401
-        print(resp)
-        return resp
-
-    docs = facetedSearch.doFacetedSearch(indexName, queryString, facets, fromParam=fromParam, size=size)
     response = {}
     hits = {}
     aggregations = []
@@ -92,12 +77,14 @@ def do_faceted_search(indexName):
     hits["docs"] = []
     for doc in docs["hits"]["hits"]:
         newDoc = {}
-        textArray = doc["_source"]["body"].split(' ')
-        body = ' '.join(textArray[:100])
         newDoc["id"] = doc["_id"]
         newDoc["score"] = doc["_score"]
-        newDoc["body"] = body
-        newDoc["tags"] = doc["_source"]["tags"]
+        newDoc["song_url"] = doc["_source"]["song_url"]
+        newDoc["song_name"] = doc["_source"]["song_name"]
+        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_duration"] = doc["_source"]["song_duration"]
+        newDoc["song_album"] = doc["_source"]["song_album"]
+        newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
         hits["docs"].append(newDoc)
 
     aggregationList = docs["aggregations"]["Terms Filter"]["buckets"]
@@ -112,23 +99,93 @@ def do_faceted_search(indexName):
 
     return json.dumps(response), 200, {}
 
-@app.route('/find-doc/<indexName>/<docId>', methods=['GET'])
-def find_doc(indexName, docId):
 
-    if (docId is None or len(docId) == 0):
-        resp = jsonify('No docID provided.')
+@app.route('/songs-lyrics', methods=['GET'])
+def find_songs_by_lyrics():
+    params = request.json
+    size = request.args.get('size')
+    fromParam = request.args.get('from')
+
+    if params is None or len(params) == 0:
+        resp = jsonify('No search criteria provided.')
         resp.status_code = 401
+        print(resp)
         return resp
 
-    if indexName == None:
-        resp = jsonify('No index name provided.')
+    docs = facetedSearch.searchSongsByLyrics(params, fromParam, size)
+
+    response = {}
+    hits = {}
+    response["timedOut"] = docs["timed_out"]
+    hits["total"] = docs["hits"]["total"]["value"]
+    hits["maxScore"] = docs["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in docs["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["song_url"] = doc["_source"]["song_url"]
+        newDoc["song_name"] = doc["_source"]["song_name"]
+        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_duration"] = doc["_source"]["song_duration"]
+        newDoc["song_album"] = doc["_source"]["song_album"]
+        newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
+        hits["docs"].append(newDoc)
+
+    response["hits"] = hits
+
+    return json.dumps(response), 200, {}
+
+@app.route('/playlists', methods=['GET'])
+def find_playlists():
+    params = request.json
+    size = request.args.get('size')
+    fromParam = request.args.get('from')
+
+    if params is None or len(params) == 0:
+        resp = jsonify('No search criteria provided.')
         resp.status_code = 401
+        print(resp)
         return resp
 
-    doc = facetedSearch.searchDocByIndex(indexName, docId)
-    returnDoc = doc['_source']
-    returnDoc['id'] = docId
-    return json.dumps(returnDoc), 200, {}
+    docs = facetedSearch.searchPlaylists(params, fromParam, size)
+
+    response = {}
+    hits = {}
+    response["timedOut"] = docs["timed_out"]
+    hits["total"] = docs["hits"]["total"]["value"]
+    hits["maxScore"] = docs["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in docs["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["playlist_url"] = doc["_source"]["playlist_url"]
+        newDoc["playlist_name"] = doc["_source"]["playlist_name"]
+        newDoc["playlist_songs"] = doc["_source"]["playlist_songs"]
+        newDoc["playlist_artists_albums"] = doc["_source"]["playlist_artists_albums"]
+        newDoc["playlist_songs_number"] = doc["_source"]["playlist_songs_number"]
+        newDoc["playlist_similar"] = doc["_source"]["playlist_similar"]
+        hits["docs"].append(newDoc)
+
+    response["hits"] = hits
+
+    return json.dumps(response), 200, {}
+
+@app.route('/simple-search', methods=['GET'])
+def simple_search():
+    params = request.json
+
+    if params is None or len(params) == 0:
+        resp = jsonify('No search criteria provided.')
+        resp.status_code = 401
+        print(resp)
+        return resp
+
+    docs = facetedSearch.simpleSearch(params)
+    print("RESULT ON API ", docs)
+
+    return json.dumps(docs), 200, {}
 
 if __name__ == '__main__':
     app.run()
