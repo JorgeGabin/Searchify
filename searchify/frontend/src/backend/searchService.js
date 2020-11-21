@@ -5,22 +5,22 @@ export const simpleSearch = (params, onSuccess, onErrors) => {
         config('POST', params), onSuccess, onErrors);
 }
 
-export const searchSongs = (params, onSuccess, onErrors) => {
-    appFetch(`/songs?from=0&size=10`,
+export const searchSongs = (params, from, onSuccess, onErrors) => {
+    appFetch(`/songs?from=${from}&size=10`,
         config('POST', params), onSuccess, onErrors);
 }
 
-export const searchLyrics = (params, onSuccess, onErrors) => {
-    appFetch(`/songs-lyrics?from=0&size=10`,
+export const searchLyrics = (params, from, onSuccess, onErrors) => {
+    appFetch(`/songs-lyrics?from=${from}&size=10`,
         config('POST', params), onSuccess, onErrors);
 }
 
-export const searchPlaylists = (params, onSuccess, onErrors) => {
-    appFetch(`/playlists?from=0&size=10`,
+export const searchPlaylists = (params, from, onSuccess, onErrors) => {
+    appFetch(`/playlists?from=${from}&size=10`,
         config('POST', params), onSuccess, onErrors);
 }
 
-export const searchArtists = (params, onSuccess, onErrors) => {
-    appFetch(`/artists?from=0&size=10`,
+export const searchArtists = (params, from, onSuccess, onErrors) => {
+    appFetch(`/artists?from=${from}&size=10`,
         config('POST', params), onSuccess, onErrors);
 }

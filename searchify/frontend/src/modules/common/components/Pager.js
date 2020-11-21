@@ -19,16 +19,16 @@ const Pager = ({back, next}) => {
     const classes = useStyles();
 
     return  (
-            <Card className={classes.pager}> 
+        <Card className={classes.pager}> 
             <Button disabled={!back.enabled} onClick={back.onClick} variant="contained" color="primary">
                 <FormattedMessage id='project.global.buttons.back'/>
             </Button>
             <Button style={{marginLeft:10 + 'px'}} disabled={!next.enabled} onClick={next.onClick} variant="contained" color="primary">
                 <FormattedMessage id='project.global.buttons.next'/>
             </Button>
-</Card>
+        </Card>
     )
-    };
+};
 
 Pager.propTypes = {
     back: PropTypes.object.isRequired,

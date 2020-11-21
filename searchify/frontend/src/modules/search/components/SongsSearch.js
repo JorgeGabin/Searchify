@@ -9,6 +9,7 @@ import backend from '../../../backend';
 import Song from './Song';
 import { Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import {Pager} from '../../common';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,8 +53,10 @@ const SongsSearch = () => {
   };
 
   const [songs, setSongs] = useState([]);
-  
-  const handleSubmit = () => {
+  const [from, setFrom] = useState(0);
+
+  const handleSubmit = (from) => {
+      setFrom(from);
       if ((!name || name === '')) {
           return;
       }
@@ -134,7 +137,7 @@ const SongsSearch = () => {
                         aria-labelledby="range-slider"
                     />
                 
-                    <Button variant="contained" color='primary' onClick={() => handleSubmit()}
+                    <Button variant="contained" color='primary' onClick={() => handleSubmit(0)}
                     startIcon={<SearchIcon/>}
                     className={classes.button}
                     >
@@ -154,6 +157,14 @@ const SongsSearch = () => {
                             <Song song={song} />
                         ))
                     }
+                    <Pager 
+                        back={{
+                            enabled: from >= 1,
+                            onClick: () => handleSubmit(from + 10)}}
+                        next={{
+                            enabled: from + 10 < songs.hits.total,
+                            onClick: () => handleSubmit(from - 10)}}
+                    />
                 </Paper>
             }
         </React.Fragment>

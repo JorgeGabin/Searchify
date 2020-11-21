@@ -43,7 +43,7 @@ const FacetedSearchResultList = ({ dataId, taxonPrefix }) => {
             {facetedSearchResultList.map((doc) => (
                 <Card key={doc.id} className={classes.content} variant="outlined">
                     <Typography variant='h6'>
-                        ID :&nbsp;{doc.id} {doc.title && ` - ${doc.title}`}
+                        ID:&nbsp;{doc.id} {doc.title && ` - ${doc.title}`}
                     </Typography>
                     <Typography paragraph className={classes.typographyScore} color="primary">
                         Score:&nbsp;{doc.score}
@@ -56,7 +56,7 @@ const FacetedSearchResultList = ({ dataId, taxonPrefix }) => {
                     </Typography>
                     {doc.tags.length > 0 ? 
                         <Typography className={classes.typographyTags} color="primary">
-                            Tags :&nbsp;
+                            Tags:&nbsp;
                             {doc.tags.join(", ")}
                         </Typography>
                         : 
