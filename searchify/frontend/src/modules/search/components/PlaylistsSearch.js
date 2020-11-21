@@ -41,11 +41,12 @@ const PlaylistsSearch = () => {
     const [songs, setSongs] = useState([]);
     const [artistAlbums, setArtistAlbums] = useState([]);
     const [from, setFrom] = useState(0);
+    const [total, setTotal] = useState(0);
 
     const [playlists, setPlaylists] = useState([]);
 
-    const handleSubmit = (from) => {
-        setFrom(from);
+    const handleSubmit = (newFrom) => {
+        setFrom(newFrom);
         if ((!name || name === '')) {
             return;
         }
@@ -55,8 +56,10 @@ const PlaylistsSearch = () => {
                 playlist_songs: songs,
                 playlist_artists_albums: artistAlbums,
             },
+            newFrom,
             (response) => {
-                setPlaylists(response.hits.docs)
+                setPlaylists(response.hits.docs);
+                setTotal(response.hits.total);
             },
         );
     }
@@ -93,7 +96,7 @@ const PlaylistsSearch = () => {
                         label="Artists and albums"
                         variant="outlined"//filled
                         onChange={e => setArtistAlbums((e.target.value ? [e.target.value] : []))} />
-                    <Button variant="contained" color='primary' onClick={() => handleSubmit()}
+                    <Button variant="contained" color='primary' onClick={() => handleSubmit(0)}
                         startIcon={<SearchIcon />}
                         className={classes.button}
                     >
@@ -118,11 +121,11 @@ const PlaylistsSearch = () => {
                     <Pager
                         back={{
                             enabled: from >= 1,
-                            onClick: () => handleSubmit(from + 10)
+                            onClick: () => handleSubmit(from - 10)
                         }}
                         next={{
-                            enabled: from + 10 < playlists.hits.total,
-                            onClick: () => handleSubmit(from - 10)
+                            enabled: from + 10 < total,
+                            onClick: () => handleSubmit(from + 10)
                         }}
                     />
                 </React.Fragment>

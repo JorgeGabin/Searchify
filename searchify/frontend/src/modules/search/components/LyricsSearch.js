@@ -8,6 +8,7 @@ import backend from '../../../backend';
 import Song from './Song';
 import { Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import { Pager } from '../../common';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,8 +40,11 @@ const LyricsSearch = () => {
   const [lyrics, setLyrics] = useState('');
 
   const [songs, setSongs] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [from, setFrom] = useState(0);
   
-  const handleSubmit = () => {
+  const handleSubmit = (newFrom) => {
+      setFrom(newFrom);
       if ((!lyrics || lyrics === '')) {
           return;
       }
@@ -48,8 +52,10 @@ const LyricsSearch = () => {
           { 
             song_lyrics: lyrics
           },
+          newFrom,
           (response) => {
-              setSongs(response.hits.docs)
+              setSongs(response.hits.docs);
+              setTotal(response.hits.total);
           },
       );
   }
@@ -70,7 +76,7 @@ const LyricsSearch = () => {
                       label="Search"
                       variant="outlined"//filled
                       onChange={e => setLyrics((e.target.value ? e.target.value : ''))} />
-                  <Button variant="contained" color='primary' onClick={() => handleSubmit()}
+                  <Button variant="contained" color='primary' onClick={() => handleSubmit(0)}
                     startIcon={<SearchIcon/>}
                     className={classes.button}
                   >
@@ -90,6 +96,14 @@ const LyricsSearch = () => {
                             <Song song={song} />
                         ))
                     }
+                    <Pager 
+                        back={{
+                            enabled: from >= 1,
+                            onClick: () => handleSubmit(from - 10)}}
+                        next={{
+                            enabled: from + 10 < total,
+                            onClick: () => handleSubmit(from + 10)}}
+                    />
                 </Paper>
             }
         </React.Fragment>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -7,6 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import backend from '../../../backend';
 import Artist from './Artist';
+import { Pager } from '../../common';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,25 +32,32 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ArtistsSearch = ({initialQuery}) => {
+const ArtistsSearch = () => {
 
     const classes = useStyles();
-    const [query, setQuery] = useState(initialQuery || '');
+    const [query, setQuery] = useState('');
 
     const [artists, setArtists] = useState([]);
     const [checked, setChecked] = useState(false);
+    const [from, setFrom] = useState(0);
+    const [total, setTotal] = useState(0);
+
+    useEffect(() => {
+        handleSubmit(null, 0)
+    }, [checked]);
 
     const handleChange = (event) => {
-        setChecked(event.target.checked);
-        handleSubmit(event);
+        setChecked(event.target.checked)
     };
     
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        let countryCode = null;
-        if ((!query || query === '')) {
-            return;
+    const handleSubmit = (event, newFrom) => {
+        setFrom(newFrom);
+
+        if (event) {
+            event.preventDefault();
         }
+        let countryCode = null;
+        
         if (checked) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 let latitude = position.coords.latitude;
@@ -64,22 +72,26 @@ const ArtistsSearch = ({initialQuery}) => {
                                     artist_name: query,
                                     artist_location: countryCode
                                 },
+                                newFrom,
                                 (response) => {
-                                    setArtists(response)
+                                    setArtists(response);
+                                    setTotal(response.hits.total);
                                 },
                             )}
                         })
                     })
             });
-        }
-
-        if (!countryCode) {
-            backend.searchService.searchArtists(
-                { artist_name: query },
-                (response) => {
-                    setArtists(response)
-                },
-            );
+        } else {
+            if (!countryCode) {
+                backend.searchService.searchArtists(
+                    { artist_name: query },
+                    newFrom,
+                    (response) => {
+                        setArtists(response);
+                        setTotal(response.hits.total);
+                    },
+                );
+            }
         }
     }
 
@@ -98,7 +110,7 @@ const ArtistsSearch = ({initialQuery}) => {
                     label="Search"
                     variant="outlined"//filled
                     onChange={e => setQuery((e.target.value ? e.target.value : ''))}
-                    onKeyUp={e => handleSubmit(e)} />
+                    onKeyUp={e => handleSubmit(e, 0)} />
 
                 <Typography gutterBottom>
                     Search by location?
@@ -122,6 +134,16 @@ const ArtistsSearch = ({initialQuery}) => {
                             <Artist artist={artist} />
                         ))
                     }
+                    <Pager
+                        back={{
+                            enabled: from >= 1,
+                            onClick: () => handleSubmit(null, from - 10)
+                        }}
+                        next={{
+                            enabled: from + 10 < total,
+                            onClick: () => handleSubmit(null, from + 10)
+                        }}
+                    />
                 </Paper>
             }
         </React.Fragment>

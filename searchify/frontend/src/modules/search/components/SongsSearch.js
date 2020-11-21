@@ -53,10 +53,11 @@ const SongsSearch = () => {
   };
 
   const [songs, setSongs] = useState([]);
+  const [total, setTotal] = useState(0);
   const [from, setFrom] = useState(0);
 
-  const handleSubmit = (from) => {
-      setFrom(from);
+  const handleSubmit = (newFrom) => {
+      setFrom(newFrom);
       if ((!name || name === '')) {
           return;
       }
@@ -70,8 +71,10 @@ const SongsSearch = () => {
             song_year_max: years[1],
             song_year_min: years[0]
           },
+          newFrom,
           (response) => {
-              setSongs(response.hits.docs)
+              setSongs(response.hits.docs);
+              setTotal(response.hits.total);
           },
       );
   }
@@ -160,10 +163,10 @@ const SongsSearch = () => {
                     <Pager 
                         back={{
                             enabled: from >= 1,
-                            onClick: () => handleSubmit(from + 10)}}
-                        next={{
-                            enabled: from + 10 < songs.hits.total,
                             onClick: () => handleSubmit(from - 10)}}
+                        next={{
+                            enabled: from + 10 < total,
+                            onClick: () => handleSubmit(from + 10)}}
                     />
                 </Paper>
             }

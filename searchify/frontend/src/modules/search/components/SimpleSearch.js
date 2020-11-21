@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -40,12 +40,16 @@ const SimpleSearch = ({initialQuery}) => {
     const [songs, setSongs] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [artists, setArtists] = useState([]);
+
+    useEffect(() => {
+        handleSubmit()
+    }, []);
     
     const handleSubmit = (event) => {
-        event.preventDefault();
-        if ((!query || query === '')) {
-            return;
+        if (event) {
+            event.preventDefault();
         }
+
         backend.searchService.simpleSearch(
             { keywords: query },
             (response) => {

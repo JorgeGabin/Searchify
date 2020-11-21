@@ -8,6 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import List from '@material-ui/core/List';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import MusicNoteIcon from '@material-ui/icons/MusicNote';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,16 +55,23 @@ const Playlist = (props) => {
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Playlist songs
         </DialogTitle>
-                <DialogContent dividers>
-                    <p style={{
-                        'white-space': 'pre-wrap'
-                    }}>
-                        {playlist.playlist_songs}
-                    </p>
-                </DialogContent>
-            </Dialog>
-        </Card>
-    );
+        <DialogContent dividers>
+          <List>
+            {playlist.playlist_songs.map((song) => (
+              <ListItem>
+                <ListItemIcon>
+                  <MusicNoteIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  {song}
+                </ListItemText>
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+      </Dialog>
+    </Card>
+  );
 
 }
 
