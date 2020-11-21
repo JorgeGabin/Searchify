@@ -94,7 +94,7 @@ const Song = (props) => {
       {
         song.song_lyrics !== '' &&
         <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-          Open dialog
+          Lyrics
         </Button>
       }
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
@@ -108,7 +108,7 @@ const Song = (props) => {
             {song.song_lyrics}
           </p>
         </DialogContent>
-      </Dialog>          
+      </Dialog>
     </Card>
   );
 }

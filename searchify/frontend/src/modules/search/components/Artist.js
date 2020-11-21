@@ -20,7 +20,13 @@ const Artist = (props) => {
     <Card key={artist._id} variant="outlined" className={classes.root}>
       <Typography variant='h6'>
           Name: {artist.artist_name}
-      </Typography>          
+      </Typography>
+      <Typography variant='h6'>
+          Followers: {artist.artist_followers}
+      </Typography>
+      <Typography variant='h6'>
+          Listeners: {artist.artist_listeners}
+      </Typography>  
     </Card>
   );
 }

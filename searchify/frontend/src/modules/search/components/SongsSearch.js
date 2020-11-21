@@ -86,7 +86,7 @@ const SongsSearch = () => {
                         type="text"
                         size="small"
                         id="queryString"
-                        label="Search"
+                        label="Song name"
                         variant="outlined"//filled
                         onChange={e => setName((e.target.value ? e.target.value : ''))} />
 
@@ -95,7 +95,7 @@ const SongsSearch = () => {
                         type="text"
                         size="small"
                         id="queryString"
-                        label="Search"
+                        label="Artist name"
                         variant="outlined"//filled
                         onChange={e => setArtists((e.target.value ? e.target.value : ''))} />
 
@@ -104,7 +104,7 @@ const SongsSearch = () => {
                         type="text"
                         size="small"
                         id="queryString"
-                        label="Search"
+                        label="Album name"
                         variant="outlined"//filled
                         onChange={e => setAlbumName((e.target.value ? e.target.value : ''))} />
 
