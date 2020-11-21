@@ -24,6 +24,28 @@ def simpleSearch(params):
     }
 
     songs_result = elastic.search(index="songs", body=query)
+    songs = {}
+    hits = {}
+    songs["timedOut"] = songs_result["timed_out"]
+    hits["total"] = songs_result["hits"]["total"]["value"]
+    hits["maxScore"] = songs_result["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in songs_result["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["song_url"] = doc["_source"]["song_url"]
+        newDoc["song_name"] = doc["_source"]["song_name"]
+        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_duration"] = doc["_source"]["song_duration"]
+        newDoc["song_album"] = doc["_source"]["song_album"]
+        try:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
+        except:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
+        hits["docs"].append(newDoc)
+
+    songs["hits"] = hits
 
     query["query"]["bool"]["must"] = {
         "prefix": {
@@ -32,6 +54,24 @@ def simpleSearch(params):
     }
 
     artists_result = elastic.search(index="artists", body=query)
+    artists = {}
+    hits = {}
+    songs["timedOut"] = artists_result["timed_out"]
+    hits["total"] = artists_result["hits"]["total"]["value"]
+    hits["maxScore"] = artists_result["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in artists_result["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["artist_url"] = doc["_source"]["artist_url"]
+        newDoc["artist_name"] = doc["_source"]["artist_name"]
+        newDoc["artist_followers"] = doc["_source"]["artist_followers"]
+        newDoc["artist_listeners"] = doc["_source"]["artist_listeners"]
+        newDoc["artist_locations"] = doc["_source"]["artist_locations"]
+        hits["docs"].append(newDoc)
+
+    artists["hits"] = hits
 
     query["query"]["bool"]["must"] = {
         "prefix": {
@@ -40,11 +80,30 @@ def simpleSearch(params):
     }
 
     playlists_result = elastic.search(index="playlists", body=query)
+    playlists = {}
+    hits = {}
+    playlists["timedOut"] = playlists_result["timed_out"]
+    hits["total"] = playlists_result["hits"]["total"]["value"]
+    hits["maxScore"] = playlists_result["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in playlists_result["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["playlist_url"] = doc["_source"]["playlist_url"]
+        newDoc["playlist_name"] = doc["_source"]["playlist_name"]
+        newDoc["playlist_songs"] = doc["_source"]["playlist_songs"]
+        newDoc["playlist_artists_albums"] = doc["_source"]["playlist_artists_albums"]
+        newDoc["playlist_songs_number"] = doc["_source"]["playlist_songs_number"]
+        newDoc["playlist_similar"] = doc["_source"]["playlist_similar"]
+        hits["docs"].append(newDoc)
+
+    playlists["hits"] = hits
 
     response = {
-        "songs": songs_result["hits"]["hits"]["_source"],
-        "artists": artists_result["hits"]["hits"]["_source"],
-        "playlists": playlists_result["hits"]["hits"]["_source"],
+        "songs": songs,
+        "artists": artists,
+        "playlists": playlists,
     }
 
     return response
@@ -123,7 +182,6 @@ def searchSongs(params, fromParam=0, size=10):
         query["query"]["bool"]["should"] = should
 
     if query["query"]["bool"]:
-        print(query)
         return elastic.search(index="songs", body=query)
     else:
         return {

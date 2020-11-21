@@ -33,9 +33,7 @@ const useStyles = makeStyles((theme) => ({
     appBar: {
       backgroundColor: theme.palette.primary.main,
     },
-
     title: {
-      flexGrow: 1,
       marginLeft: '20px',
     },
   }));
@@ -67,10 +65,10 @@ const Header = () => {
                         <ListItemLink to="/songs" primary="Songs" icon={<PersonIcon  style={{ color: 'white' }} />} />
                     </List>
                     <List>
-                        <ListItemLink to="/playlists" primary="Playlists" icon={<PersonIcon  style={{ color: 'white' }} />} />
+                        <ListItemLink to="/lyrics" primary="Lyrics" icon={<PersonIcon  style={{ color: 'white' }} />} />
                     </List>
                     <List>
-                        <ListItemLink to="/lyrics" primary="Lyrics" icon={<PersonIcon  style={{ color: 'white' }} />} />
+                        <ListItemLink to="/playlists" primary="Playlists" icon={<PersonIcon  style={{ color: 'white' }} />} />
                     </List>
                     <List>
                         <ListItemLink to="/artists" primary="Artists" icon={<PersonIcon  style={{ color: 'white' }} />} />

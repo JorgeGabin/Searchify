@@ -5,6 +5,9 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Home from './Home';
 import Container from '@material-ui/core/Container';
 import Toolbar from '@material-ui/core/Toolbar';
+import SongsSearch from '../../search/components/SongsSearch';
+import LyricsSearch from '../../search/components/LyricsSearch';
+import PlaylistsSearch from '../../search/components/PlaylistsSearch';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,9 +24,9 @@ const Body = () => {
                 <br />
                 <Switch>
                     <Route exact path="/"><Home /></Route>
-                    <Route exact path="/songs"><Home /></Route>
-                    <Route exact path="/lyrics"><Home /></Route>
-                    <Route exact path="/playlists"><Home /></Route>
+                    <Route exact path="/songs"><SongsSearch /></Route>
+                    <Route exact path="/lyrics"><LyricsSearch /></Route>
+                    <Route exact path="/playlists"><PlaylistsSearch /></Route>
                     <Route exact path="/artists"><Home /></Route>
                     <Route><Home /></Route>
                 </Switch>

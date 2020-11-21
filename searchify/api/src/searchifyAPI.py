@@ -2,9 +2,11 @@ from flask import jsonify, Flask, request, redirect, url_for
 from celery import Celery
 import os,json
 from search import facetedSearch
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+CORS(app)
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__)) + "/../data/"
 
@@ -54,7 +56,8 @@ def taskstatus(task_id):
     return jsonify(response)
 
 
-@app.route('/songs', methods=['GET'])
+@app.route('/songs', methods=['POST'])
+@cross_origin()
 def find_songs():
     params = request.json
     size = request.args.get('size')
@@ -84,7 +87,10 @@ def find_songs():
         newDoc["song_artists"] = doc["_source"]["song_artists"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
         newDoc["song_album"] = doc["_source"]["song_album"]
-        newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
+        try:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
+        except:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
         hits["docs"].append(newDoc)
 
     aggregationList = docs["aggregations"]["Terms Filter"]["buckets"]
@@ -97,10 +103,11 @@ def find_songs():
     response["hits"] = hits
     response["aggregations"] = aggregations
 
-    return json.dumps(response), 200, {}
+    return response
 
 
-@app.route('/songs-lyrics', methods=['GET'])
+@app.route('/songs-lyrics', methods=['POST'])
+@cross_origin()
 def find_songs_by_lyrics():
     params = request.json
     size = request.args.get('size')
@@ -129,14 +136,18 @@ def find_songs_by_lyrics():
         newDoc["song_artists"] = doc["_source"]["song_artists"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
         newDoc["song_album"] = doc["_source"]["song_album"]
-        newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
+        try:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
+        except:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
         hits["docs"].append(newDoc)
 
     response["hits"] = hits
 
-    return json.dumps(response), 200, {}
+    return response
 
-@app.route('/playlists', methods=['GET'])
+@app.route('/playlists', methods=['POST'])
+@cross_origin()
 def find_playlists():
     params = request.json
     size = request.args.get('size')
@@ -170,9 +181,10 @@ def find_playlists():
 
     response["hits"] = hits
 
-    return json.dumps(response), 200, {}
+    return response
 
-@app.route('/simple-search', methods=['GET'])
+@app.route('/simple-search', methods=['POST'])
+@cross_origin()
 def simple_search():
     params = request.json
 
@@ -183,9 +195,8 @@ def simple_search():
         return resp
 
     docs = facetedSearch.simpleSearch(params)
-    print("RESULT ON API ", docs)
 
-    return json.dumps(docs), 200, {}
+    return docs
 
 if __name__ == '__main__':
     app.run()

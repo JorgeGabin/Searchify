@@ -33,8 +33,8 @@ function ListItemLink(props) {
     return (
         <li>
             <ListItem button component={renderLink}>
-                {icon ? <ListItemIcon style={{ minWidth: 35 + "px" }}>{icon}</ListItemIcon> : null}
-                <Typography variant="h5" noWrap className={classes.title}>{primary}</Typography>
+                {/* {icon ? <ListItemIcon style={{ minWidth: 35 + "px" }}>{icon}</ListItemIcon> : null} */}
+                <Typography variant="h6" noWrap className={classes.title}>{primary}</Typography>
             </ListItem>
         </li>
     );

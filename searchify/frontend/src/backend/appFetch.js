@@ -123,6 +123,6 @@ export const config = (method, body) => {
 }
 
 export const appFetch = (path, options, onSuccess, onErrors) =>
-    fetch(`${process.env.REACT_APP_BACKEND_URL}${path}`, options)
+    fetch(`http://localhost:5000${path}`, options)
         .then(response => handleResponse(response, onSuccess, onErrors))
         .catch(networkErrorCallback);
