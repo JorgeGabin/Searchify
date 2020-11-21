@@ -1,8 +1,8 @@
 # Frontend build output.
-searchify/searchify-frontend/build/
-searchify/searchify-frontend/.vs/
-searchify/searchify-frontend/yarn-error.log
-searchify/searchify-frontend/node_modules
+searchify/frontend/build/
+searchify/frontend/.vs/
+searchify/frontend/yarn-error.log
+searchify/frontend/node_modules
 
 # Common python ignore
 __init__.py
@@ -14,3 +14,4 @@ venv
 searchify/api/src/tools/
 searchify/api/celerybeat-schedule
 searchify/api/KB/data-concept-instance-relations.tx
+searchify/frontend/package-lock.json

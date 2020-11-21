@@ -36,8 +36,8 @@ song_mapping = {
                     }
                 }
             },
-            "song_artists": {
-                "type": "keyword",
+            "song_artist": {
+                "type": "text",
                 "fields": {
                     "analyzed": {
                         "type": "text",
@@ -49,8 +49,31 @@ song_mapping = {
             "song_duration": {
                 "type": "long",
             },
-            "song_album": {
-                "type": "object",
+            "song_artist_followers": {
+                "type": "integer",
+            },
+            "song_artist_listeners": {
+                "type": "integer",
+            },
+            "song_album_name": {
+                "type": "text",
+                "fields": {
+                    "analyzed": {
+                        "type": "text",
+                        "analyzer": "eventNameAnalyzer",
+                        "search_analyzer": "eventNameAnalyzer"
+                    }
+                }
+            },
+            "song_album_year": {
+                "type": "text",
+                "fields": {
+                    "analyzed": {
+                        "type": "text",
+                        "analyzer": "eventNameAnalyzer",
+                        "search_analyzer": "eventNameAnalyzer"
+                    }
+                }
             },
             "song_lyrics": {
                 "type": "text",

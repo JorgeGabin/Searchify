@@ -2,9 +2,11 @@ from flask import jsonify, Flask, request, redirect, url_for
 from celery import Celery
 import os,json
 from search import facetedSearch
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+CORS(app)
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__)) + "/../data/"
 
@@ -54,7 +56,8 @@ def taskstatus(task_id):
     return jsonify(response)
 
 
-@app.route('/songs', methods=['GET'])
+@app.route('/songs', methods=['POST'])
+@cross_origin()
 def find_songs():
     params = request.json
     size = request.args.get('size')
@@ -81,10 +84,14 @@ def find_songs():
         newDoc["score"] = doc["_score"]
         newDoc["song_url"] = doc["_source"]["song_url"]
         newDoc["song_name"] = doc["_source"]["song_name"]
-        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_artist"] = doc["_source"]["song_artist"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
-        newDoc["song_album"] = doc["_source"]["song_album"]
-        newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
+        newDoc["song_album_name"] = doc["_source"]["song_album_name"]
+        newDoc["song_album_year"] = doc["_source"]["song_album_year"]
+        try:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
+        except:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
         hits["docs"].append(newDoc)
 
     aggregationList = docs["aggregations"]["Terms Filter"]["buckets"]
@@ -97,10 +104,11 @@ def find_songs():
     response["hits"] = hits
     response["aggregations"] = aggregations
 
-    return json.dumps(response), 200, {}
+    return response
 
 
-@app.route('/songs-lyrics', methods=['GET'])
+@app.route('/songs-lyrics', methods=['POST'])
+@cross_origin()
 def find_songs_by_lyrics():
     params = request.json
     size = request.args.get('size')
@@ -126,17 +134,22 @@ def find_songs_by_lyrics():
         newDoc["score"] = doc["_score"]
         newDoc["song_url"] = doc["_source"]["song_url"]
         newDoc["song_name"] = doc["_source"]["song_name"]
-        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_artist"] = doc["_source"]["song_artist"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
-        newDoc["song_album"] = doc["_source"]["song_album"]
-        newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
+        newDoc["song_album_name"] = doc["_source"]["song_album_name"]
+        newDoc["song_album_year"] = doc["_source"]["song_album_year"]
+        try:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
+        except:
+            newDoc["song_lyrics"] = doc["_source"]["song_lyrics"]
         hits["docs"].append(newDoc)
 
     response["hits"] = hits
 
-    return json.dumps(response), 200, {}
+    return response
 
-@app.route('/playlists', methods=['GET'])
+@app.route('/playlists', methods=['POST'])
+@cross_origin()
 def find_playlists():
     params = request.json
     size = request.args.get('size')
@@ -170,9 +183,46 @@ def find_playlists():
 
     response["hits"] = hits
 
-    return json.dumps(response), 200, {}
+    return response
 
-@app.route('/simple-search', methods=['GET'])
+@app.route('/artists', methods=['POST'])
+@cross_origin()
+def find_artists():
+    params = request.json
+    size = request.args.get('size')
+    fromParam = request.args.get('from')
+
+    if params is None or len(params) == 0:
+        resp = jsonify('No search criteria provided.')
+        resp.status_code = 401
+        print(resp)
+        return resp
+
+    docs = facetedSearch.searchArtists(params, fromParam, size)
+
+    response = {}
+    hits = {}
+    response["timedOut"] = docs["timed_out"]
+    hits["total"] = docs["hits"]["total"]["value"]
+    hits["maxScore"] = docs["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in docs["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["artist_url"] = doc["_source"]["artist_url"]
+        newDoc["artist_name"] = doc["_source"]["artist_name"]
+        newDoc["artist_locations"] = doc["_source"]["artist_locations"]
+        newDoc["artist_followers"] = doc["_source"]["artist_followers"]
+        newDoc["artist_listeners"] = doc["_source"]["artist_listeners"]
+        hits["docs"].append(newDoc)
+
+    response["hits"] = hits
+
+    return response
+
+@app.route('/simple-search', methods=['POST'])
+@cross_origin()
 def simple_search():
     params = request.json
 
@@ -183,9 +233,8 @@ def simple_search():
         return resp
 
     docs = facetedSearch.simpleSearch(params)
-    print("RESULT ON API ", docs)
 
-    return json.dumps(docs), 200, {}
+    return docs
 
 if __name__ == '__main__':
     app.run()
