@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { duration, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -18,16 +18,15 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
         listStyle: 'none',
         padding: theme.spacing(2),
-        width: '100%',
         margin: 30,
         flexDirection: 'column',
-        width: '90vw'
     },
     title: {
         marginBottom: 30
     },
-    button: {
+    item: {
         marginLeft: theme.spacing(3),
+        marginBottom: theme.spacing(3),
     },
     search: {
         display: 'block'
@@ -79,6 +78,7 @@ const PlaylistsSearch = () => {
                         id="queryString"
                         label="Playlist name"
                         variant="outlined"//filled
+                        className={classes.item}
                         onChange={e => setName((e.target.value ? e.target.value : ''))} />
                     <TextField
                         value={songs}
@@ -87,6 +87,7 @@ const PlaylistsSearch = () => {
                         id="queryString"
                         label="Songs in playlist"
                         variant="outlined"//filled
+                        className={classes.item}
                         onChange={e => setSongs((e.target.value ? [e.target.value] : []))} />
                     <TextField
                         value={artistAlbums}
@@ -95,10 +96,11 @@ const PlaylistsSearch = () => {
                         id="queryString"
                         label="Artists and albums"
                         variant="outlined"//filled
+                        className={classes.item}
                         onChange={e => setArtistAlbums((e.target.value ? [e.target.value] : []))} />
                     <Button variant="contained" color='primary' onClick={() => handleSubmit(0)}
                         startIcon={<SearchIcon />}
-                        className={classes.button}
+                        className={classes.item}
                     >
                         <span>Search</span>
                     </Button>
@@ -117,17 +119,18 @@ const PlaylistsSearch = () => {
                                 <Playlist playlist={playlist} />
                             ))
                         }
+                        
+                        <Pager
+                            back={{
+                                enabled: from >= 1,
+                                onClick: () => handleSubmit(from - 10)
+                            }}
+                            next={{
+                                enabled: from + 10 < total,
+                                onClick: () => handleSubmit(from + 10)
+                            }}
+                        />
                     </Paper>
-                    <Pager
-                        back={{
-                            enabled: from >= 1,
-                            onClick: () => handleSubmit(from - 10)
-                        }}
-                        next={{
-                            enabled: from + 10 < total,
-                            onClick: () => handleSubmit(from + 10)
-                        }}
-                    />
                 </React.Fragment>
             }
         </React.Fragment>

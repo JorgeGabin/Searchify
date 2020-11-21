@@ -18,10 +18,8 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
         listStyle: 'none',
         padding: theme.spacing(2),
-        width: '100%',
         margin: 30,
         flexDirection: 'column',
-        width: '90vw'
     },
     title: {
         marginBottom: 30

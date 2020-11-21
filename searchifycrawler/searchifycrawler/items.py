@@ -11,9 +11,12 @@ import scrapy
 class SearchifycrawlerSong(scrapy.Item):
     song_url = scrapy.Field()
     song_name = scrapy.Field()
-    song_artists = scrapy.Field()
+    song_artist = scrapy.Field()
+    song_artist_followers = scrapy.Field()
+    song_artist_listeners = scrapy.Field()
     song_duration = scrapy.Field()
-    song_album = scrapy.Field()
+    song_album_name = scrapy.Field()
+    song_album_year = scrapy.Field()
     song_lyrics = scrapy.Field()
 
 class SearchifycrawlerPlaylist(scrapy.Item):

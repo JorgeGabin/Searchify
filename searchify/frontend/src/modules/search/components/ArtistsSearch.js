@@ -19,17 +19,17 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         margin: 30,
         flexDirection: 'column',
-        width: '90vw'
     },
     title: {
         marginBottom: 30
     },
-    chip: {
-        margin: theme.spacing(0.5),
+    search: {
+        display: 'flex',
     },
-    button: {
-        marginLeft: theme.spacing(1.5),
-    },
+    searchItem: {
+        marginLeft: theme.spacing(3),
+        alignSelf: 'center'
+    }
 }));
 
 const ArtistsSearch = () => {
@@ -102,25 +102,27 @@ const ArtistsSearch = () => {
                     Artists advanced search
                 </Typography>
                 <Divider />
-                <TextField
-                    value={query}
-                    type="text"
-                    size="small"
-                    id="queryString"
-                    label="Search"
-                    variant="outlined"//filled
-                    onChange={e => setQuery((e.target.value ? e.target.value : ''))}
-                    onKeyUp={e => handleSubmit(e, 0)} />
+                <div className={classes.search}>
+                    <TextField
+                        value={query}
+                        type="text"
+                        size="small"
+                        id="queryString"
+                        label="Search"
+                        variant="outlined"//filled
+                        onChange={e => setQuery((e.target.value ? e.target.value : ''))}
+                        onKeyUp={e => handleSubmit(e, 0)} />
 
-                <Typography gutterBottom>
-                    Search by location?
-                </Typography>
-                <Switch
-                    checked={checked}
-                    onChange={handleChange}
-                    color="primary"
-                    name="location"
-                />
+                    <Typography className={classes.searchItem}>
+                        Search by your location?
+                    </Typography>
+                    <Switch
+                        checked={checked}
+                        onChange={handleChange}
+                        color="primary"
+                        name="location"
+                    />
+                </div>
             </Paper>
             {
                 artists.length !== 0 &&

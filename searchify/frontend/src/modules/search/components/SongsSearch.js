@@ -19,15 +19,22 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
         listStyle: 'none',
         padding: theme.spacing(2),
-        width: '100%',
         margin: 30,
         flexDirection: 'column',
-        width: '90vw'
     },
     title: {
         marginBottom: 30
     },
-    button: {
+    item: {
+        marginLeft: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+    },
+    slider: {
+        marginLeft: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        marginRight: theme.spacing(3),
+    },
+    sliderLabel: {
         marginLeft: theme.spacing(3),
     },
     search: {
@@ -41,8 +48,8 @@ const SongsSearch = () => {
   const [name, setName] = useState('');
   const [artists, setArtists] = useState('');
   const [albumName, setAlbumName] = useState('');
-  const [durations, setDurations] = useState([0, 1000]);
-  const [years, setYears] = useState([1900, 2020]);
+  const [durations, setDurations] = useState([0, 1200]);
+  const [years, setYears] = useState([1800, 2020]);
 
   const handleDurationsChange = (event, newValue) => {
     setDurations(newValue);
@@ -58,13 +65,10 @@ const SongsSearch = () => {
 
   const handleSubmit = (newFrom) => {
       setFrom(newFrom);
-      if ((!name || name === '')) {
-          return;
-      }
       backend.searchService.searchSongs(
           { 
             song_name: name,
-            song_artists: artists,
+            song_artist: artists,
             song_album_name: albumName,
             song_duration_max: durations[1],
             song_duration_min: durations[0],
@@ -94,6 +98,7 @@ const SongsSearch = () => {
                         id="queryString"
                         label="Song name"
                         variant="outlined"//filled
+                        className={classes.item}
                         onChange={e => setName((e.target.value ? e.target.value : ''))} />
 
                     <TextField
@@ -103,6 +108,7 @@ const SongsSearch = () => {
                         id="queryString"
                         label="Artist name"
                         variant="outlined"//filled
+                        className={classes.item}
                         onChange={e => setArtists((e.target.value ? e.target.value : ''))} />
 
                     <TextField
@@ -112,37 +118,40 @@ const SongsSearch = () => {
                         id="queryString"
                         label="Album name"
                         variant="outlined"//filled
+                        className={classes.item}
                         onChange={e => setAlbumName((e.target.value ? e.target.value : ''))} />
 
-                    <Typography id="range-slider" gutterBottom>
-                        Duration range
+                    <Typography id="range-slider" gutterBottom className={classes.sliderLabel}>
+                        Duration range in seconds
                     </Typography>
                     <Slider
                         min={0}
                         step={10}
-                        max={1000}
+                        max={1200}
                         value={durations}
                         onChange={handleDurationsChange}
                         valueLabelDisplay="auto"
                         aria-labelledby="range-slider"
+                        className={classes.slider}
                     />    
                     
-                    <Typography id="range-slider" gutterBottom>
+                    <Typography id="range-slider" gutterBottom className={classes.sliderLabel}>
                         Release year range
                     </Typography>
                     <Slider
-                        min={1900}
-                        step={1}
-                        max={2021}
+                        min={1800}
+                        step={10}
+                        max={2020}
                         value={years}
                         onChange={handleYearsChange}
                         valueLabelDisplay="auto"
                         aria-labelledby="range-slider"
+                        className={classes.slider}
                     />
                 
                     <Button variant="contained" color='primary' onClick={() => handleSubmit(0)}
                     startIcon={<SearchIcon/>}
-                    className={classes.button}
+                    className={classes.item}
                     >
                     <span>Search</span>
                     </Button>

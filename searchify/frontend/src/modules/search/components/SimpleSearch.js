@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         margin: 30,
         flexDirection: 'column',
-        width: '90vw'
     },
     title: {
         marginBottom: 30
@@ -64,7 +63,7 @@ const SimpleSearch = ({initialQuery}) => {
         <React.Fragment>
             <Paper className={classes.root} variant="outlined">
                 <Typography className={classes.title} variant='h5'>
-                    Search anything you want!
+                    Search among songs, playlists and artists
                 </Typography>
                 <Divider />
                 <TextField

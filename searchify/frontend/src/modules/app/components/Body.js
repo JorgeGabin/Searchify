@@ -12,7 +12,8 @@ import ArtistsSearch from '../../search/components/ArtistsSearch';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      height:'100%'
+      height:'100%',
+      minHeight: '87vh',
     },
   }));
 
@@ -32,7 +33,6 @@ const Body = () => {
                     <Route><Home /></Route>
                 </Switch>
             </Container>
-            <Toolbar/>
         </React.Fragment>
     );
 

@@ -14,7 +14,7 @@ def simpleSearch(params):
         "size": 4,
         "query": {
             "bool": {}
-        }
+        },
     }
 
     query["query"]["bool"]["must"] = {
@@ -22,6 +22,15 @@ def simpleSearch(params):
             "song_name": params["keywords"]
         }
     }
+
+    query["sort"] = [
+        {
+            "song_artist_listeners": {"order": "desc"}
+        },
+        {
+            "song_artist_followers": {"order": "desc"}
+        },
+    ]
 
     songs_result = elastic.search(index="songs", body=query)
     songs = {}
@@ -36,9 +45,10 @@ def simpleSearch(params):
         newDoc["score"] = doc["_score"]
         newDoc["song_url"] = doc["_source"]["song_url"]
         newDoc["song_name"] = doc["_source"]["song_name"]
-        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_artist"] = doc["_source"]["song_artist"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
-        newDoc["song_album"] = doc["_source"]["song_album"]
+        newDoc["song_album_name"] = doc["_source"]["song_album_name"]
+        newDoc["song_album_year"] = doc["_source"]["song_album_year"]
         try:
             newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
         except:
@@ -52,6 +62,15 @@ def simpleSearch(params):
             "artist_name": params["keywords"]
         }
     }
+
+    query["sort"] = [
+        {
+            "artist_followers": {"order": "desc"}
+        },
+        {
+            "artist_listeners": {"order": "desc"}
+        },
+    ]
 
     artists_result = elastic.search(index="artists", body=query)
     artists = {}
@@ -78,6 +97,8 @@ def simpleSearch(params):
             "playlist_name": params["keywords"]
         }
     }
+
+    query["sort"] = []
 
     playlists_result = elastic.search(index="playlists", body=query)
     playlists = {}
@@ -118,6 +139,14 @@ def searchSongs(params, fromParam=0, size=10):
         "query": {
             "bool": {}
         },
+        "sort": [
+            {
+                "song_artist_listeners": {"order": "desc"}
+            },
+            {
+                "song_artist_followers": {"order": "desc"}
+            },
+        ],
         "aggs": {
             "Terms Filter": {
                 "terms": {
@@ -132,51 +161,49 @@ def searchSongs(params, fromParam=0, size=10):
 
     if "song_name" in params:
         must.append({
-            "match": {
+            "prefix": {
                 "song_name": params["song_name"]
             }
         })
 
-    if must:
-        query["query"]["bool"]["must"] = must
-
     should = []
 
-    if "song_artists" in params:
-        should.append({
-            "match": {
-                "song_artists": params["song_artists"]
+    if "song_artist" in params:
+        must.append({
+            "prefix": {
+                "song_artist": params["song_artist"]
             }
         })
 
     if "song_album_name" in params:
-        should.append({
-            "match": {
-                "song_album.album_name": params["song_album_name"]
+        must.append({
+            "prefix": {
+                "song_album_name": params["song_album_name"],
             }
         })
 
     if "song_duration_max" in params and "song_duration_min" in params:
-        should.append({
+        must.append({
             "range": {
                 "song_duration": {
                     "gte": params["song_duration_min"],
                     "lte": params["song_duration_max"],
-                    "boost": 10.0
                 }
             }
         })
 
     if "song_year_max" in params and "song_year_min" in params:
-        should.append({
+        must.append({
             "range": {
-                "song_album.album_release_year": {
+                "song_album_year": {
                     "gte": params["song_year_min"],
                     "lte": params["song_year_max"],
-                    "boost": 10.0
                 }
             }
         })
+
+    if must:
+        query["query"]["bool"]["must"] = must
 
     if should:
         query["query"]["bool"]["should"] = should
@@ -197,7 +224,7 @@ def searchSongsByLyrics(params, fromParam=0, size=10):
         "size": size,
         "query": {
             "bool": {}
-        }
+        },
     }
 
     if "song_lyrics" in params:

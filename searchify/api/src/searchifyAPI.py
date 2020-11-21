@@ -84,9 +84,10 @@ def find_songs():
         newDoc["score"] = doc["_score"]
         newDoc["song_url"] = doc["_source"]["song_url"]
         newDoc["song_name"] = doc["_source"]["song_name"]
-        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_artist"] = doc["_source"]["song_artist"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
-        newDoc["song_album"] = doc["_source"]["song_album"]
+        newDoc["song_album_name"] = doc["_source"]["song_album_name"]
+        newDoc["song_album_year"] = doc["_source"]["song_album_year"]
         try:
             newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
         except:
@@ -133,9 +134,10 @@ def find_songs_by_lyrics():
         newDoc["score"] = doc["_score"]
         newDoc["song_url"] = doc["_source"]["song_url"]
         newDoc["song_name"] = doc["_source"]["song_name"]
-        newDoc["song_artists"] = doc["_source"]["song_artists"]
+        newDoc["song_artist"] = doc["_source"]["song_artist"]
         newDoc["song_duration"] = doc["_source"]["song_duration"]
-        newDoc["song_album"] = doc["_source"]["song_album"]
+        newDoc["song_album_name"] = doc["_source"]["song_album_name"]
+        newDoc["song_album_year"] = doc["_source"]["song_album_year"]
         try:
             newDoc["song_lyrics"] = doc["_source"]["song_lyrics"].replace("\\n", "\n")
         except:
