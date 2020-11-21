@@ -5,7 +5,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import backend from '../../../backend';
-import Song from './Song';
 import { Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import Playlist from './Playlist';

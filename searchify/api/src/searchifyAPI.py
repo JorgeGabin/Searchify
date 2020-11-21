@@ -183,6 +183,42 @@ def find_playlists():
 
     return response
 
+@app.route('/artists', methods=['POST'])
+@cross_origin()
+def find_artists():
+    params = request.json
+    size = request.args.get('size')
+    fromParam = request.args.get('from')
+
+    if params is None or len(params) == 0:
+        resp = jsonify('No search criteria provided.')
+        resp.status_code = 401
+        print(resp)
+        return resp
+
+    docs = facetedSearch.searchArtists(params, fromParam, size)
+
+    response = {}
+    hits = {}
+    response["timedOut"] = docs["timed_out"]
+    hits["total"] = docs["hits"]["total"]["value"]
+    hits["maxScore"] = docs["hits"]["max_score"]
+    hits["docs"] = []
+    for doc in docs["hits"]["hits"]:
+        newDoc = {}
+        newDoc["id"] = doc["_id"]
+        newDoc["score"] = doc["_score"]
+        newDoc["artist_url"] = doc["_source"]["artist_url"]
+        newDoc["artist_name"] = doc["_source"]["artist_name"]
+        newDoc["artist_locations"] = doc["_source"]["artist_locations"]
+        newDoc["artist_followers"] = doc["_source"]["artist_followers"]
+        newDoc["artist_listeners"] = doc["_source"]["artist_listeners"]
+        hits["docs"].append(newDoc)
+
+    response["hits"] = hits
+
+    return response
+
 @app.route('/simple-search', methods=['POST'])
 @cross_origin()
 def simple_search():

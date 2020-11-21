@@ -8,6 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SongsSearch from '../../search/components/SongsSearch';
 import LyricsSearch from '../../search/components/LyricsSearch';
 import PlaylistsSearch from '../../search/components/PlaylistsSearch';
+import ArtistsSearch from '../../search/components/ArtistsSearch';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +28,7 @@ const Body = () => {
                     <Route exact path="/songs"><SongsSearch /></Route>
                     <Route exact path="/lyrics"><LyricsSearch /></Route>
                     <Route exact path="/playlists"><PlaylistsSearch /></Route>
-                    <Route exact path="/artists"><Home /></Route>
+                    <Route exact path="/artists"><ArtistsSearch /></Route>
                     <Route><Home /></Route>
                 </Switch>
             </Container>

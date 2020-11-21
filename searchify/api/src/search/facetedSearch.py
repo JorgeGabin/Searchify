@@ -260,6 +260,55 @@ def searchPlaylists(params, fromParam=0, size=10):
         }
 
 
+def searchArtists(params, fromParam=0, size=10):
+    elastic = Elasticsearch(ELASTIC_URL)
+
+    query = {
+        "from": fromParam,
+        "size": size,
+        "query": {
+            "bool": {}
+        },
+        "sort": [
+            {
+                "artist_listeners": {"order": "desc"}
+            },
+            {
+                "artist_followers": {"order": "desc"}
+            },
+        ]
+    }
+
+    must = []
+
+    if "artist_name" in params:
+        must.append({
+            "prefix": {
+                "artist_name": params["artist_name"]
+            }
+        })
+
+    if "artist_location" in params:
+        must.append({
+            "match": {
+                "artist_locations": {
+                    "query": params["artist_location"],
+                    "boost": 10
+                }
+            }
+        })
+
+    if must:
+        query["query"]["bool"]["must"] = must
+
+    if query["query"]["bool"]:
+        return elastic.search(index="artists", body=query)
+    else:
+        return {
+            "backendError": "No params received in the request"
+        }
+
+
 def searchDocByIndex(indexName, docId):
     elastic = Elasticsearch(ELASTIC_URL)
     return elastic.get(index=indexName, id=docId)

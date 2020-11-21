@@ -14,3 +14,4 @@ venv
 searchify/api/src/tools/
 searchify/api/celerybeat-schedule
 searchify/api/KB/data-concept-instance-relations.tx
+searchify/frontend/package-lock.json
