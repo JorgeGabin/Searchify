@@ -1,5 +1,5 @@
 FROM python:3.6.9
-LABEL maintainer="Juan"
+LABEL maintainer="Searchify"
 
 WORKDIR /app
 
@@ -21,9 +21,6 @@ ENV FLASK_ENV="${FLASK_ENV}" \
     PYTHONUNBUFFERED="true"
 
 COPY . .
-
-RUN find . -type f -iname "*.sh" -exec chmod +x {} \;
-RUN find . -type f -iname "*.sh" -exec dos2unix {} \;
 
 RUN pip install --editable ./src
 

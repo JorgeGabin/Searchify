@@ -1,15 +1,17 @@
 # Frontend build output.
-searchify/searchify-frontend/build/
-searchify/searchify-frontend/node_modules/
-searchify/searchify-frontend/.vs/
-searchify/searchify-frontend/yarn-error.log
+searchify/frontend/build/
+searchify/frontend/.vs/
+searchify/frontend/yarn-error.log
+searchify/frontend/node_modules
 
-# API configuration. 
-searchify/api/.idea
-searchify/api/*__init__.py
-searchify/api/data/
-searchify/api/*__pycache__
+# Common python ignore
+__init__.py
+__pycache__/
+.idea
+venv
+
+# API configuration.
 searchify/api/src/tools/
 searchify/api/celerybeat-schedule
-searchify/api/src/hiExpan/__pycache__/
 searchify/api/KB/data-concept-instance-relations.tx
+searchify/frontend/package-lock.json
