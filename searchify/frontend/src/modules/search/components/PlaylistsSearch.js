@@ -37,8 +37,8 @@ const PlaylistsSearch = () => {
 
     const classes = useStyles();
     const [name, setName] = useState('');
-    const [songs, setSongs] = useState([]);
-    const [artistAlbums, setArtistAlbums] = useState([]);
+    const [songs, setSongs] = useState('');
+    const [artistAlbums, setArtistAlbums] = useState('');
     const [from, setFrom] = useState(0);
     const [total, setTotal] = useState(0);
 
@@ -49,11 +49,12 @@ const PlaylistsSearch = () => {
         if ((!name || name === '')) {
             return;
         }
+
         backend.searchService.searchPlaylists(
             {
                 playlist_name: name,
-                playlist_songs: songs,
-                playlist_artists_albums: artistAlbums,
+                playlist_songs: songs.split(','),
+                playlist_artists_albums: artistAlbums.split(','),
             },
             newFrom,
             (response) => {
@@ -88,7 +89,7 @@ const PlaylistsSearch = () => {
                         label="Songs in playlist"
                         variant="outlined"//filled
                         className={classes.item}
-                        onChange={e => setSongs((e.target.value ? [e.target.value] : []))} />
+                        onChange={e => setSongs((e.target.value ? e.target.value : ''))} />
                     <TextField
                         value={artistAlbums}
                         type="text"
@@ -97,7 +98,7 @@ const PlaylistsSearch = () => {
                         label="Artists and albums"
                         variant="outlined"//filled
                         className={classes.item}
-                        onChange={e => setArtistAlbums((e.target.value ? [e.target.value] : []))} />
+                        onChange={e => setArtistAlbums((e.target.value ? e.target.value : ''))} />
                     <Button variant="contained" color='primary' onClick={() => handleSubmit(0)}
                         startIcon={<SearchIcon />}
                         className={classes.item}
@@ -105,6 +106,13 @@ const PlaylistsSearch = () => {
                         <span>Search</span>
                     </Button>
                 </div>
+                <p>
+                    In songs and artists/albums fields you must include each value separated by commas without spaces between each one. And 
+                    Example: Song1,Song2... 
+                </p>
+                <p>
+                    Both songs or artists/albums must completely match the song name or the artists/albums even the capitalized letters.
+                </p>
             </Paper>
             {
                 playlists.length !== 0 &&

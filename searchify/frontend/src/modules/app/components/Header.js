@@ -2,14 +2,10 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import SvgIcon from '@material-ui/core/SvgIcon';
 import List from '@material-ui/core/List';
-import PersonIcon from '@material-ui/icons/Person';
 import {ListItemLink} from '../../common';
-
-const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,17 +26,8 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-function HomeIcon(props) {
-    return (
-        <SvgIcon {...props}>
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-        </SvgIcon>
-    );
-}
-
 const Header = () => {
     const classes = useStyles();
-    const theme = useTheme();
     return (
         <div className={classes.root}>
             <CssBaseline />

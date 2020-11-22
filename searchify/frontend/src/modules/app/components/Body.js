@@ -1,7 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Home from './Home';
 import Container from '@material-ui/core/Container';
 import Toolbar from '@material-ui/core/Toolbar';
